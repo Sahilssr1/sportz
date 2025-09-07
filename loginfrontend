@@ -3,196 +3,169 @@
 <head runat="server">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login • Instagram</title>
-    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" type="image/x-icon" />
+    <title>Sportz Media - Login / Signup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* General Body & Font Styling */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 14px; line-height: 18px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        
-        /* Main Layout */
-        main { display: flex; justify-content: center; align-items: center; width: 100%; max-width: 935px; padding: 20px; }
-        .left-panel { margin-right: 32px; }
-        .left-panel img { height: 600px; }
-        .right-panel { max-width: 350px; width: 100%; display: flex; flex-direction: column; }
-        
-        /* Main Container and Switcher Box */
-        .form-container, .switch-box { background-color: #000; border: 1px solid rgb(54, 54, 54); padding: 20px 40px; text-align: center; }
-        .switch-box { margin-top: 10px; padding: 25px; }
-        
-        /* Logo and Form Headers */
-        .logo { width: 175px; margin: 22px auto 12px; }
-        .form-header { color: #a8a8a8; font-size: 17px; font-weight: 600; line-height: 20px; margin: 0 auto 20px; }
-        
-        /* Form Styling */
-        .input-container { position: relative; margin-bottom: 6px; }
-        .input-container input[type="text"], .input-container input[type="password"] { width: 100%; padding: 14px 10px 4px; background-color: #121212; border: 1px solid rgb(54, 54, 54); border-radius: 6px; color: #fff; font-size: 12px; }
-        .input-container input:focus { outline: none; border-color: #a8a8a8; }
-        
-        /* ASP.NET Label as a floating label */
-        .input-container .asp-label { position: absolute; top: 50%; left: 10px; transform: translateY(-50%); color: #a8a8a8; font-size: 12px; pointer-events: none; transition: all 0.2s ease; }
-        .input-container input:not(:placeholder-shown) + .asp-label,
-        .input-container input:focus + .asp-label { top: 6px; font-size: 10px; transform: translateY(0); }
-        .input-container input::placeholder { color: transparent; }
-        
-        .show-hide-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #fff; font-weight: 600; cursor: pointer; font-size: 14px; }
-        
-        /* Buttons */
-        .asp-button { background-color: #0095f6; color: #fff; border: none; border-radius: 8px; padding: 8px; font-weight: 600; margin-top: 14px; cursor: pointer; width: 100%; font-size: 14px; }
-        .asp-button:disabled { background-color: rgba(0, 149, 246, 0.3); cursor: not-allowed; }
-        
-        /* Separator ("OR") */
-        .separator { display: flex; align-items: center; text-align: center; margin: 18px 0; color: #a8a8a8; font-weight: 600; font-size: 13px; }
-        .separator::before, .separator::after { content: ''; flex: 1; border-bottom: 1px solid rgb(54, 54, 54); }
-        .separator:not(:empty)::before { margin-right: .5em; }
-        .separator:not(:empty)::after { margin-left: .5em; }
-        
-        /* Links and Toggles */
-        a, .link-button { color: #0095f6; text-decoration: none; font-weight: 600; background: none; border: none; cursor: pointer; font-size: inherit; }
-        .forgot-password { font-size: 12px; font-weight: normal; margin-top: 12px; display: inline-block; }
+        /* --- Base & Centering Styles --- */
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
 
-        /* Hidden by default */
-        #signup-form-wrapper { display: none; }
+        body {
+            display: flex;
+            justify-content: center; /* Horizontally center */
+            align-items: center;    /* Vertically center */
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        /* Ensure the ASP.NET form allows centering */
+        #form1 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-        /* Responsive Design */
-        @media (max-width: 875px) { .left-panel { display: none; } main { justify-content: center; } }
+        /* --- Form Container Styling --- */
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px 30px;
+            background: #ffffff;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            border-radius: 15px;
+        }
+
+        /* --- Logo Styling --- */
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-align: center;
+            background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- Input Fields Styling --- */
+        input[type="text"], input[type="password"], input[type="email"], input[type="tel"] {
+            width: 100%;
+            padding: 14px 16px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: #f8f9fa;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+
+        input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus, input[type="tel"]:focus {
+            outline: none;
+            border-color: #4b6cb7;
+            box-shadow: 0 0 0 3px rgba(75, 108, 183, 0.2);
+        }
+
+        /* --- Button Styling --- */
+        .btn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            background: linear-gradient(90deg, #3a5a9a 0%, #11203b 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        /* --- Toggle Link Styling --- */
+        .toggle-link {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .toggle-link a {
+            color: #4b6cb7;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .toggle-link a:hover {
+            text-decoration: underline;
+            color: #182848;
+        }
+
+        /* --- Utility Class --- */
+        .hidden { 
+            display: none; 
+        }
+
+     /* --- Mobile Responsive Design --- */
+@media (max-width: 600px) {
+    .container {
+        width: 100%; /* Allow container to be flexible */
+        margin: 0 15px; /* Add 15px of space on left and right */
+        padding: 30px 20px;
+    }
+
+    .logo {
+        font-size: 2rem;
+    }
+}
+
+            }
     </style>
+    <script>
+        function toggleForm(showSignup) {
+            document.getElementById("loginForm").classList.toggle("hidden", showSignup);
+            document.getElementById("signupForm").classList.toggle("hidden", !showSignup);
+        }
+    </script>
 </head>
 <body>
     <form id="form1" runat="server">
-        <div>
-            <main>
-                <div class="left-panel">
-                    <img src="instagram-ui-collage.png" alt="Instagram UI Showcase" />
+        <div class="container">
+            <div class="logo">Sportz Media</div>
+
+            <div id="loginForm">
+                <asp:TextBox ID="txtLoginUser" runat="server" placeholder="Username or Email"></asp:TextBox>
+                <asp:TextBox ID="txtLoginPass" runat="server" TextMode="Password" placeholder="Password"></asp:TextBox>
+                <asp:Button ID="btnLogin" runat="server" CssClass="btn" Text="Log in" OnClick="btnLogin_Click" />
+                <div class="toggle-link">
+                    Don’t have an account? <a onclick="toggleForm(true)">Sign up</a>
                 </div>
-                <div class="right-panel">
-                    <div class="form-container">
-                        <img class="logo" src="instagram-logo.svg" alt="Instagram Logo" />
+            </div>
 
-                        <div id="login-form-wrapper">
-                            <div class="input-container">
-                                <asp:TextBox ID="txtLoginUsername" runat="server" required="required" placeholder=" " autocomplete="username"></asp:TextBox>
-                                <asp:Label AssociatedControlID="txtLoginUsername" runat="server" CssClass="asp-label">Phone number, username, or email</asp:Label>
-                            </div>
-                            <div class="input-container">
-                                <asp:TextBox ID="txtLoginPassword" runat="server" TextMode="Password" required="required" placeholder=" " autocomplete="current-password"></asp:TextBox>
-                                <asp:Label AssociatedControlID="txtLoginPassword" runat="server" CssClass="asp-label">Password</asp:Label>
-                                <button type="button" class="show-hide-btn">Show</button>
-                            </div>
-                            <asp:Button ID="btnLogin" runat="server" Text="Log in" CssClass="asp-button" OnClick="btnLogin_Click" />
-                            <asp:Literal ID="litStatusMessage" runat="server" EnableViewState="false"></asp:Literal>
-
-                            <div class="separator"><span>OR</span></div>
-                            <a href="#" class="facebook-login link-button">Log in with Facebook</a>
-                            <a href="#" class="forgot-password">Forgot password?</a>
-                        </div>
-
-                        <div id="signup-form-wrapper">
-                             <h2 class="form-header">Sign up to see photos and videos from your friends.</h2>
-                            <div class="input-container">
-                                <asp:TextBox ID="txtSignUpEmail" runat="server" required="required" placeholder=" " autocomplete="email"></asp:TextBox>
-                                <asp:Label AssociatedControlID="txtSignUpEmail" runat="server" CssClass="asp-label">Email</asp:Label>
-                            </div>
-                             <div class="input-container">
-                                <asp:TextBox ID="txtSignUpUsername" runat="server" required="required" placeholder=" " autocomplete="username"></asp:TextBox>
-                                <asp:Label AssociatedControlID="txtSignUpUsername" runat="server" CssClass="asp-label">Username</asp:Label>
-                            </div>
-                             <div class="input-container">
-                                <asp:TextBox ID="txtSignUpPhone" runat="server" required="required" placeholder=" " autocomplete="tel"></asp:TextBox>
-                                <asp:Label AssociatedControlID="txtSignUpPhone" runat="server" CssClass="asp-label">Phone Number</asp:Label>
-                            </div>
-                            <div class="input-container">
-                                <asp:TextBox ID="txtSignUpPassword" runat="server" TextMode="Password" required="required" placeholder=" " autocomplete="new-password"></asp:TextBox>
-                                <asp:Label AssociatedControlID="txtSignUpPassword" runat="server" CssClass="asp-label">Password</asp:Label>
-                                <button type="button" class="show-hide-btn">Show</button>
-                            </div>
-                            <asp:Button ID="btnSignUp" runat="server" Text="Sign up" CssClass="asp-button" OnClick="btnSignUp_Click"/>
-                        </div>
-                    </div>
-
-                    <div class="switch-box">
-                        <p>
-                            <span id="switchToSignUp">Don't have an account? <button type="button" id="showSignUp" class="link-button">Sign up</button></span>
-                            <span id="switchToLogin" style="display: none;">Have an account? <button type="button" id="showLogin" class="link-button">Log in</button></span>
-                        </p>
-                    </div>
+            <div id="signupForm" class="hidden">
+                <asp:TextBox ID="txtSignupUser" runat="server" placeholder="Username"></asp:TextBox>
+                <asp:TextBox ID="txtSignupEmail" runat="server" TextMode="Email" placeholder="Email"></asp:TextBox>
+                <asp:TextBox ID="txtSignupPhone" runat="server" placeholder="Phone"></asp:TextBox>
+                <asp:TextBox ID="txtSignupPass" runat="server" TextMode="Password" placeholder="Password"></asp:TextBox>
+                <asp:Button ID="btnSignup" runat="server" CssClass="btn" Text="Sign Up" OnClick="btnSignup_Click" />
+                <div class="toggle-link">
+                    Already have an account? <a onclick="toggleForm(false)">Log in</a>
                 </div>
-            </main>
+            </div>
         </div>
     </form>
-    <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', () => {
-            // Form wrappers and switch links
-            const loginWrapper = document.getElementById('login-form-wrapper');
-            const signupWrapper = document.getElementById('signup-form-wrapper');
-            const showSignUpBtn = document.getElementById('showSignUp');
-            const showLoginBtn = document.getElementById('showLogin');
-            const switchToSignUpText = document.getElementById('switchToSignUp');
-            const switchToLoginText = document.getElementById('switchToLogin');
-
-            // --- FORM TOGGLING LOGIC ---
-            showSignUpBtn.addEventListener('click', () => {
-                loginWrapper.style.display = 'none';
-                signupWrapper.style.display = 'block';
-                switchToSignUpText.style.display = 'none';
-                switchToLoginText.style.display = 'block';
-            });
-
-            showLoginBtn.addEventListener('click', () => {
-                signupWrapper.style.display = 'none';
-                loginWrapper.style.display = 'block';
-                switchToLoginText.style.display = 'none';
-                switchToSignUpText.style.display = 'block';
-            });
-
-            // --- INTERACTIVITY FOR BOTH FORMS ---
-            const allPasswordContainers = document.querySelectorAll('.input-container input[type="password"]');
-
-            allPasswordContainers.forEach(passwordInput => {
-                const container = passwordInput.parentElement;
-                const showHideBtn = container.querySelector('.show-hide-btn');
-
-                if (showHideBtn) {
-                    showHideBtn.addEventListener('click', () => {
-                        if (passwordInput.type === 'password') {
-                            passwordInput.type = 'text';
-                            showHideBtn.textContent = 'Hide';
-                        } else {
-                            passwordInput.type = 'password';
-                            showHideBtn.textContent = 'Show';
-                        }
-                    });
-                }
-            });
-
-            // --- BUTTON ENABLING/DISABLING LOGIC ---
-            // We use ClientID to get the ID generated by ASP.NET
-            const txtLoginUsername = document.getElementById('<%= txtLoginUsername.ClientID %>');
-            const txtLoginPassword = document.getElementById('<%= txtLoginPassword.ClientID %>');
-            const btnLogin = document.getElementById('<%= btnLogin.ClientID %>');
-
-            const txtSignUpEmail = document.getElementById('<%= txtSignUpEmail.ClientID %>');
-            const txtSignUpUsername = document.getElementById('<%= txtSignUpUsername.ClientID %>');
-            const txtSignUpPhone = document.getElementById('<%= txtSignUpPhone.ClientID %>');
-            const txtSignUpPassword = document.getElementById('<%= txtSignUpPassword.ClientID %>');
-            const btnSignUp = document.getElementById('<%= btnSignUp.ClientID %>');
-
-            function validateLoginForm() {
-                btnLogin.disabled = !(txtLoginUsername.value.trim() && txtLoginPassword.value.trim().length >= 6);
-            }
-
-            function validateSignUpForm() {
-                btnSignUp.disabled = !(txtSignUpEmail.value.trim() && txtSignUpUsername.value.trim() && txtSignUpPhone.value.trim() && txtSignUpPassword.value.trim().length >= 6);
-            }
-
-            // Add listeners to all inputs
-            [txtLoginUsername, txtLoginPassword].forEach(el => el.addEventListener('input', validateLoginForm));
-            [txtSignUpEmail, txtSignUpUsername, txtSignUpPhone, txtSignUpPassword].forEach(el => el.addEventListener('input', validateSignUpForm));
-
-            // Initial validation check
-            validateLoginForm();
-            validateSignUpForm();
-        });
-    </script>
 </body>
 </html>
