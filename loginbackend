@@ -1,125 +1,68 @@
 using System;
+using System.Collections.Generic;
 using System.Configuration;
-using System.Data.SqlClient;
-using MySql.Data.MySqlClient; // CORRECT: Use the MySQL connector
-// using System.Data.SqlClient; // INCORRECT: This is for SQL Server
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using MySql.Data.MySqlClient;
 
 namespace Sportz_media.Sports
 {
-    public partial class login : System.Web.UI.Page
+    public partial class Login : System.Web.UI.Page
     {
-        // Get the correct connection string from Web.config
         private readonly string _connectionString = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
 
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            // This method runs when the page loads
-        }
+        protected void Page_Load(object sender, EventArgs e) { }
+
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
-            string username = txtLoginUsername.Text.Trim(); // Can be username or email
-            string password = txtLoginPassword.Text;
-
-            // This query finds the user and retrieves their stored password
-            string query = "SELECT password FROM users WHERE username = @Username OR email = @Username";
-
-            try
+            using (MySqlConnection con = new MySqlConnection(_connectionString))
             {
-                using (MySqlConnection con = new MySqlConnection(_connectionString))
+                con.Open();
+                string query = "SELECT * FROM sportz_media.users WHERE (username=@user OR email=@user) AND password=@pass;";
+                MySqlCommand cmd = new MySqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@user", txtLoginUser.Text.Trim());
+                cmd.Parameters.AddWithValue("@pass", txtLoginPass.Text.Trim());
+
+                MySqlDataReader dr = cmd.ExecuteReader();
+                if (dr.HasRows)
                 {
-                    using (MySqlCommand cmd = new MySqlCommand(query, con))
-                    {
-                        cmd.Parameters.AddWithValue("@Username", username);
-                        con.Open();
+                    // Save session info
+                    Session["username"] = txtLoginUser.Text.Trim();
 
-                        // ExecuteScalar gets the first value from the query result (the password)
-                        object result = cmd.ExecuteScalar();
-
-                        if (result != null)
-                        {
-                            string dbPassword = result.ToString();
-
-                            // INSECURE: Compares the plain text password from the form to the plain text password in the DB
-                            if (password == dbPassword)
-                            {
-                                // Login successful
-                                Session["username"] = username;
-                                Response.Redirect("HomePage.aspx"); // Redirect to your main page after login
-                            }
-                            else
-                            {
-                                litStatusMessage.Text = "<p style='color:red;'>Invalid username or password.</p>";
-                            }
-                        }
-                        else
-                        {
-                            // No user found with that username/email
-                            litStatusMessage.Text = "<p style='color:red;'>Invalid username or password.</p>";
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                litStatusMessage.Text = "<p style='color:red;'>An error occurred. Please try again.</p>";
-                // TODO: Log the actual error: ex.Message
-            }
-        }
-
-        protected void btnSignUp_Click(object sender, EventArgs e)
-        {
-            string email = txtSignUpEmail.Text.Trim();
-            string username = txtSignUpUsername.Text.Trim();
-            string phone = txtSignUpPhone.Text.Trim();
-            string password = txtSignUpPassword.Text; // Storing plain text password
-
-            // Basic validation
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-            {
-                litStatusMessage.Text = "<p style='color:red;'>Please fill all required fields.</p>";
-                return;
-            }
-
-            // This query inserts the new user's details
-            // NOTE: I've assumed your password column is named 'password'. Change if necessary.
-            string query = "INSERT INTO users (email, username, phone, password) VALUES (@Email, @Username, @Phone, @Password)";
-
-            try
-            {
-                using (MySqlConnection con = new MySqlConnection(_connectionString))
-                {
-                    using (MySqlCommand cmd = new MySqlCommand(query, con))
-                    {
-                        // Use parameters to prevent SQL Injection
-                        cmd.Parameters.AddWithValue("@Email", email);
-                        cmd.Parameters.AddWithValue("@Username", username);
-                        cmd.Parameters.AddWithValue("@Phone", phone);
-                        cmd.Parameters.AddWithValue("@Password", password); // INSECURE: Storing plain password
-
-                        con.Open();
-                        cmd.ExecuteNonQuery();
-
-                        litStatusMessage.Text = "<p style='color:green;'>Sign up successful! Please log in.</p>";
-                    }
-                }
-            }
-            catch (MySqlException ex)
-            {
-                // Error code 1062 is for a duplicate entry (e.g., same username or email)
-                if (ex.Number == 1062)
-                {
-                    litStatusMessage.Text = "<p style='color:red;'>Username or email already exists.</p>";
+                    // Redirect to Home.aspx
+                    Response.Redirect("Home.aspx");
                 }
                 else
                 {
-                    litStatusMessage.Text = "<p style='color:red;'>A database error occurred.</p>";
+                    Response.Write("<script>alert('Invalid Username/Email or Password');</script>");
                 }
             }
-            catch (Exception ex)
+        }
+
+        protected void btnSignup_Click(object sender, EventArgs e)
+        {
+            using (MySqlConnection con = new MySqlConnection(_connectionString))
             {
-                litStatusMessage.Text = "<p style='color:red;'>An unexpected error occurred.</p>";
-                // TODO: Log the actual error: ex.Message
+                con.Open();
+                string query = "INSERT INTO sportz_media.users (username, email, phone, password) VALUES (@username, @email, @phone, @pass);";
+                MySqlCommand cmd = new MySqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@username", txtSignupUser.Text.Trim());
+                cmd.Parameters.AddWithValue("@email", txtSignupEmail.Text.Trim());
+                cmd.Parameters.AddWithValue("@phone", txtSignupPhone.Text.Trim());
+                cmd.Parameters.AddWithValue("@pass", txtSignupPass.Text.Trim());
+
+                int result = cmd.ExecuteNonQuery();
+                if (result > 0)
+                {
+                    Response.Write("<script>alert('Signup Successful! Please login.');</script>");
+                }
+                else
+                {
+                    Response.Write("<script>alert('Signup Failed! Try again.');</script>");
+                }
             }
         }
     }
